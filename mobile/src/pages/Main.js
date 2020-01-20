@@ -45,7 +45,7 @@ const [currentRegion, setCurrentRegion] = useState(null);
           <View style={styles.callout}>
             <Text style={styles.devName}>Higor Hotz</Text>
             <Text style={styles.devBio}>Antenado com as melhores tecnologias de desenvolvimento web e mobile.</Text>
-            <Text style={styles.devTechs}>ReactJS, node.js,D#</Text>
+            <Text style={styles.devTechs}>ReactJS, node.js,C#</Text>
           </View>
         </Callout>
       </Marker>
