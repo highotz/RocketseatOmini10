@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from './services/api';
 
 import './global.css';
 import './app.css';
 import './SideBar.css';
 import './Main.css';
+
+import DevItem from './components/DevItem'
+import DevForm from './components/DevForm'
 
 // Componente = funcao que retorna um HTML, CSS, JS | deve ser criado quando o 
 //    codigo se repete ou quando precisamos isolar uma area da aplicacao como um footer;
@@ -13,92 +17,37 @@ import './Main.css';
 
 // Estado = informacoes mantidas pelo componente (lembrar: imutabilidade)
 
-
 function App() {
+
+  const [devs, setDevs] = useState([]);
+
+
+  useEffect(() => {
+    async function loadDevs(){
+      const response = await api.get('/devs');
+
+      setDevs(response.data)
+    }
+
+    loadDevs();
+  },[]);
+
+  async function handleAddDev(data){
+    const response = await api.post('/devs', data)
+    setDevs([...devs, response.data]);
+  }
 
   return (
     <div id='app'>
       <aside>
         <strong>Cadastrar</strong>
-        <form>
-
-          <div class="input-block">
-          <label htmlFor="github_username">Usuário do Github</label>
-          <input name="github_username" id="github_username"required/>
-          </div>
-
-          <div class="input-block">
-            <label htmlFor="techs">Tecnologias</label>
-            <input name="techs" id="techs"required/>
-          </div>
-
-          <div className="input-group">
-
-            <div class="input-block">
-              <label htmlFor="latitude">Latitude</label>
-              <input name="latitude" id="latitude"required/>
-            </div>
-
-            <div class="input-block">
-              <label htmlFor="logitude">logitude</label>
-              <input name="logitude" id="logitude"required/>
-            </div>
-
-            
-
-          </div>
-
-          <button type="submit">Salvar</button>
-
-        </form>
-
+        <DevForm onSubmit={handleAddDev}/>
       </aside>
       <main>
         <ul>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars1.githubusercontent.com/u/26824488?s=400&u=cdee9e7bf684a16165bb4cb98970423f15fab6f4&v=4" alt="Higor Hotz"/>
-              <div className="user-info">
-                <strong>Higor Hotz</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>CTO na @Rocketseat. Apaixonado pelas melhores tecnologias de desenvolvimento web e mobile.</p>
-            <a href="https://github.com/highotz">Acessar perfil no Github</a>
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars1.githubusercontent.com/u/26824488?s=400&u=cdee9e7bf684a16165bb4cb98970423f15fab6f4&v=4" alt="Higor Hotz"/>
-              <div className="user-info">
-                <strong>Higor Hotz</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>CTO na @Rocketseat. Apaixonado pelas melhores tecnologias de desenvolvimento web e mobile.</p>
-            <a href="https://github.com/highotz">Acessar perfil no Github</a>
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars1.githubusercontent.com/u/26824488?s=400&u=cdee9e7bf684a16165bb4cb98970423f15fab6f4&v=4" alt="Higor Hotz"/>
-              <div className="user-info">
-                <strong>Higor Hotz</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>CTO na @Rocketseat. Apaixonado pelas melhores tecnologias de desenvolvimento web e mobile.</p>
-            <a href="https://github.com/highotz">Acessar perfil no Github</a>
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars1.githubusercontent.com/u/26824488?s=400&u=cdee9e7bf684a16165bb4cb98970423f15fab6f4&v=4" alt="Higor Hotz"/>
-              <div className="user-info">
-                <strong>Higor Hotz</strong>
-                <span>ReactJS, React Native, Node.js</span>
-              </div>
-            </header>
-            <p>CTO na @Rocketseat. Apaixonado pelas melhores tecnologias de desenvolvimento web e mobile.</p>
-            <a href="https://github.com/highotz">Acessar perfil no Github</a>
-          </li>
+          {devs.map( dev => (
+            <DevItem key={dev._id} dev={dev} />
+          ))}
         </ul>
       </main>
     </div>
